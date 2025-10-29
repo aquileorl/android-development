@@ -1,5 +1,9 @@
 package com.example.myfirstweatherapp
 
+import android.os.Bundle
+import android.widget.Button
+import android.widget.EditText
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import kotlin.math.ln
 
@@ -66,6 +70,70 @@ class MainActivity : AppCompatActivity() {
             n == 0 -> "Cero"
             else -> "Positivo"
         }
+
+    }
+
+    private fun procesaLista(lista: List<Int>, criterio: (Int) -> Boolean): List<Int> =
+        lista.filter(criterio)
+
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        //1. Llama al onCreate de la clase base-original-padre savedInstanceState para instanciarla
+        super.onCreate(savedInstanceState)
+
+        //2. La siguiente línea cargará el archivo .XML de la vista
+        setContentView(R.layout.activity_main)
+
+        val tvTitulo = findViewById<TextView>(R.id.tvTitulo)
+        val etEntrada = findViewById<EditText>(R.id.etEntrada)
+        val btnProcesar = findViewById<Button>(R.id.btnProcesar)
+        val tvResultado = findViewById<TextView>(R.id.tvResultado)
+
+        tvTitulo.text = "KOTLIN DEMO"
+
+        btnProcesar.setOnClickListener {
+
+            val valor = etEntrada.text.toString().trim()
+
+            if (valor.isEmpty()) {
+                etEntrada.error = "Escribe algo primero"
+                tvResultado.text = ""
+                return@setOnClickListener
+            }
+
+            val num = valor.toIntOrNull()
+
+            val salida = if (num != null) {
+
+                buildString {
+
+                    //1. Mostrar el valor de entrada
+                    appendLine("Entrada: $num")
+
+                    //2. Llamar a funciones de números (usando ${} para la función)
+                    appendLine("Tipo Número: ${tipoNumero(num)}")
+                    appendLine("Suma hasta: ${sumaHasta(num)}")
+                    appendLine("Es Par: ${esPar(num)}")
+
+
+                }
+
+            } else {
+                // -- LÓGICA SI ES TEXTO
+
+                //1. Mostrar el valor de entrada (usando $valor, el String original)
+                buildString {
+                    appendLine("Entrada: $valor")
+
+                    //2.Obtener la longitud de la cadena
+                    appendLine("Longitud: ${valor.length}")
+                }
+
+            }
+            tvResultado.text = salida
+            etEntrada.text.clear()
+        }
+
 
     }
 
